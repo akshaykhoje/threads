@@ -1,2 +1,4 @@
 all: 
-	gcc threads.c -lpthread
+	gcc -Wall threads.c -lpthread
+clean:
+	rm a.out
