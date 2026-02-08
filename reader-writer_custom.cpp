@@ -121,12 +121,16 @@ int main(void) {
     for(int i=1; i<=50; i++) {
         threads.emplace_back(readerTask, &rw, i);
     }
+
+    std::this_thread::sleep_for(std::chrono::milliseconds(2000));
     
     // start 2 writers
     for(int i=1; i<=2; i++) {
         threads.emplace_back(writerTask, &rw, i);
     }
-
+    
+    std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+    
     // start 2 more readers (these should be blocked until writers finish)
     for(int i=1001; i<=1100; i++) {
         threads.emplace_back(readerTask, &rw, i);
