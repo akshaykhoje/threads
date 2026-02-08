@@ -65,7 +65,7 @@ int main(void) {
     
     // Phase 2 : Interleaving a writer - writer waits till all active readers finish reading (in phase 1)
     std::this_thread::sleep_for(std::chrono::milliseconds(700));
-    threads.emplace_back(&SharedMetaData::write_data, &store, 1, 234);
+    threads.emplace_back(&SharedMetaData::write_data, &store, 2, 234);
     
     // Phase 3 : Post-write readers - wait until writer finishes
     for(int i=21; i<=30; i++) {
