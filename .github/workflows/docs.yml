@@ -41,7 +41,7 @@ jobs:
       - name: Upload to GitHub Pages
         uses: actions/upload-pages-artifact@v3
         with:
-          path: 'html' # Ensure this matches HTML_OUTPUT in your Doxyfile
+          path: 'docs/html' # Ensure this matches HTML_OUTPUT in your Doxyfile
 
       - name: Deploy to GitHub Pages
         id: deployment

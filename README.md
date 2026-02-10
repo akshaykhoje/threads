@@ -49,3 +49,4 @@ This project features a fully automated documentation workflow. Every push to `m
 ```bash
 doxygen Doxyfile
 # Open docs/html/index.html in your browser
+```
