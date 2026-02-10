@@ -1,0 +1,19 @@
+name: Deploy Doxygen
+on:
+  push:
+    branches: [ main ]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Doxygen
+        run: sudo apt-get install doxygen
+      - name: Run Doxygen
+        run: doxygen Doxyfile
+      - name: Upload to GitHub Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: 'html' # The folder where Doxygen saves the HTML
+      - name: Deploy
+        uses: actions/deploy-pages@v4
