@@ -47,6 +47,7 @@ public:
         is_shutdown = true;
         not_full.notify_all();
         not_empty.notify_all();
+        return;
     }
 
     /**
@@ -59,7 +60,7 @@ public:
         std::unique_lock<std::mutex> lock(mtx);
 
         // Wait while full AND not shutting down
-        while(buffer.size() == max_capacity && !is_shutdown) {
+        while(buffer.size() >= max_capacity && !is_shutdown) {
             not_full.wait(lock);
         }
 
@@ -112,6 +113,7 @@ void producerTask(BoundedBlockingQueue* q) {
     }
     std::cout << "[Producer] Finished all items" << std::endl;
     q->shut_down();
+    return;
 }
 
 /**
@@ -119,14 +121,20 @@ void producerTask(BoundedBlockingQueue* q) {
  * @param q Pointer to the shared BoundedBlockingQueue.
  */
 void consumerTask(BoundedBlockingQueue* q) {
-    for(int i=1; i<=1000; ++i) {
+    for(int i=1; i<=100; ++i) {
         int val;
-        if(!q->pop(val)) break; 
-
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        bool pop_status = q->pop(val);
+        if(!pop_status) {
+            std::cout << "---[ConsumerTask] : SHUTDOWN DETECTED. STOPPING CONSUMPTION---" << std::endl;
+            break; 
+        } else {
+            std::cout << "Consuming value..." << std::endl;
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        }
     }
     std::cout << "[Consumer] Finished my requirements! Triggering shutdown..." << std::endl;
     q->shut_down();
+    return;
 }
 
 /**
