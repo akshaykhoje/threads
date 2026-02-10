@@ -30,9 +30,13 @@ jobs:
       - name: Run Doxygen
         run: doxygen Doxyfile
 
-      - name: Fix Jekyll Issues
         # This prevents GitHub from hiding folders starting with underscores
-        run: touch html/.nojekyll
+      - name: Fix Jekyll Issues
+        run : |
+          # Create the folder if Doxygen failed to (prevents the crash)
+          mkdir -p html
+          touch html/.nojekyll 
+        
 
       - name: Upload to GitHub Pages
         uses: actions/upload-pages-artifact@v3
