@@ -81,7 +81,8 @@ int main(void) {
     }
 
     for(auto& t : threads) {
-        t.join();
+        if(t.joinable())
+            t.join();
     }
 
     return 0;

@@ -137,7 +137,8 @@ int main(void) {
     }
 
     for(auto& t : threads) {
-        t.join();
+        if(t.joinable())
+            t.join();
     }
 
     std::cout << "All metadata operations completed." << std::endl;

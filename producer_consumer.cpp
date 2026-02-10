@@ -91,8 +91,10 @@ int main() {
     std::thread producerThread(producerTask, &queue);   // start the producer thread
     std::thread consumerThread(consumerTask, &queue);   // start the consumer thread
 
-    producerThread.join();
-    consumerThread.join();
+    if(producerThread.joinable())
+        producerThread.join();
+    if(consumerThread.joinable())
+        consumerThread.join();
 
     std::cout << "All work finished." << std::endl;     // Final log message
     return 0;
