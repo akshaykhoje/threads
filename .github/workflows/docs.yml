@@ -1,19 +1,44 @@
-name: Deploy Doxygen
+name: Deploy Doxygen to Pages
+
 on:
   push:
     branches: [ main ]
+
+# --- CRITICAL: Added Permissions ---
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Install Doxygen
-        run: sudo apt-get install doxygen
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Install Doxygen & Graphviz
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y doxygen graphviz
+
       - name: Run Doxygen
         run: doxygen Doxyfile
+
+      - name: Fix Jekyll Issues
+        # This prevents GitHub from hiding folders starting with underscores
+        run: touch html/.nojekyll
+
       - name: Upload to GitHub Pages
         uses: actions/upload-pages-artifact@v3
         with:
-          path: 'html' # The folder where Doxygen saves the HTML
-      - name: Deploy
+          path: 'html' # Ensure this matches HTML_OUTPUT in your Doxyfile
+
+      - name: Deploy to GitHub Pages
+        id: deployment
         uses: actions/deploy-pages@v4
